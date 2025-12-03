@@ -32,15 +32,22 @@ class GeorchestraLdapClient:
     importable API. Each method delegates to the matching legacy script while
     reapplying :class:`LdapSettings` to the legacy ``config.py``.
 
-    Common usage
-    ------------
+    Common usage example :
+    ----------------------
     >>> from georchestra_ldap import GeorchestraLdapClient, LdapSettings
+    >>> 
     >>> client = GeorchestraLdapClient(LdapSettings.from_env())
+    >>> 
     >>> client.create_role("FOO")
+    >>> 
     >>> client.create_user("alice", "alice@example.org", "Alice", "Example", "pwd")
+    >>> 
     >>> client.moderate_user("alice@example.org")
+    >>> 
     >>> client.add_user_role("alice@example.org", "FOO")
+    >>> 
     >>> client.read_user_roles("alice@example.org")
+    >>> 
     >>> client.delete_user("alice@example.org")
     """
 
@@ -56,14 +63,11 @@ class GeorchestraLdapClient:
         """
         Apply settings, log the action, call the legacy function.
 
-        Parameters
-        ----------
-        action_name : str
-            Friendly action name used for logging.
-        func : callable
-            Legacy function to execute.
-        *args, **kwargs
-            Forwarded to the underlying function.
+        Args:
+            action_name (str): Friendly action name used for logging.
+            func (callable): Legacy function to execute.
+            *args: Positional arguments forwarded to the underlying function.
+            **kwargs: Keyword arguments forwarded to the underlying function.
         """
         self._apply_settings()
         logger.info("Running action: %s", action_name)
@@ -78,10 +82,8 @@ class GeorchestraLdapClient:
         Update the underlying ``config.py`` values, optionally replacing the
         current :class:`LdapSettings` instance.
 
-        Parameters
-        ----------
-        settings : LdapSettings | None
-            New settings to apply; if None, reapply the existing instance.
+        Args:
+            settings (LdapSettings | None): New settings to apply; if None, reapply the existing instance.
         """
         if settings is not None:
             self.settings = settings
@@ -98,12 +100,9 @@ class GeorchestraLdapClient:
         """
         Create an organization if it does not exist.
 
-        Parameters
-        ----------
-        org_cn : str
-            Common name of the organization.
-        org_name : str | None
-            Optional display name (defaults to ``org_cn``).
+        Args:
+            org_cn (str): Common name of the organization.
+            org_name (str | None): Optional display name (defaults to ``org_cn``).
         """
         return self._run("create_org", create_org.create_org, org_cn, org_name)
 
@@ -112,18 +111,12 @@ class GeorchestraLdapClient:
         """
         Create a pending user with geOrchestra objectClasses, USER role, C2C org.
 
-        Parameters
-        ----------
-        uid : str
-            LDAP uid.
-        email : str
-            User email.
-        given_name : str
-            Given name.
-        sn : str
-            Surname.
-        password : str
-            Plain password, hashed before being stored.
+        Args:
+            uid (str): LDAP uid.
+            email (str): User email.
+            given_name (str): Given name.
+            sn (str): Surname.
+            password (str): Plain password, hashed before being stored.
         """
         return self._run("create_user", create_user.create_user, uid, email, given_name, sn, password)
 
