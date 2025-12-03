@@ -1,3 +1,9 @@
+# Ensure legacy aliases are registered before importing the client, so imports
+# like ``import ldap_connection`` inside ldap_actions work after packaging.
+from georchestra_ldap.utils import ensure_legacy_import_aliases as _ensure_aliases
+
+_ensure_aliases()
+
 from georchestra_ldap.client import GeorchestraLdapClient
 from georchestra_ldap.config import LdapSettings
 from georchestra_ldap.errors import LegacyConfigMissing, LegacyScriptsMissing
