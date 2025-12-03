@@ -8,25 +8,41 @@ from ldap_connection import get_connection
 import config
 
 
-def add_role(user_dn: str, role_cn: str):
+def add_role(email: str, role_cn: str):
     conn = get_connection()
 
-    # DN du rôle
+    # 1) Trouver l'utilisateur par email
+    conn.search(
+        search_base=config.LDAP_SEARCH_BASE,
+        search_filter=f"({config.LDAP_MAIL_ATTRIBUTE}={email})",
+        search_scope="SUBTREE",
+        attributes=[]  # ne pas demander "dn" car ce n'est pas un attribut
+    )
+
+    if not conn.entries:
+        print(f"User not found: {email}")
+        return
+
+    user_dn = conn.entries[0].entry_dn
+    print(f"User DN found: {user_dn}")
+
+    # 2) Construire le DN du rôle
     role_dn = f"cn={role_cn},{config.LDAP_ROLE_DN},{config.LDAP_SEARCH_BASE}"
 
-    # Vérifier que le rôle existe
+    # 3) Vérifier que le rôle existe
     conn.search(
         search_base=f"{config.LDAP_ROLE_DN},{config.LDAP_SEARCH_BASE}",
         search_filter=f"(cn={role_cn})",
-        attributes=["cn"]
+        attributes=["member"]
     )
 
     if not conn.entries:
         print(f"Role not found: {role_cn}")
         return
 
-    print(f"Adding {user_dn} to role {role_dn}")
+    print(f"Adding user to role: {role_dn}")
 
+    # 4) Ajouter l'utilisateur au rôle
     try:
         conn.modify(
             role_dn,
@@ -39,7 +55,7 @@ def add_role(user_dn: str, role_cn: str):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python add_user_role.py <user_dn> <role_cn>")
+        print("Usage: python add_user_role.py <email> <role_cn>")
         sys.exit(1)
 
     add_role(sys.argv[1], sys.argv[2])

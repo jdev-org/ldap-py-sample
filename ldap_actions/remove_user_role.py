@@ -8,12 +8,28 @@ from ldap_connection import get_connection
 import config
 
 
-def remove_role(user_dn: str, role_cn: str):
+def remove_role(email: str, role_cn: str):
     conn = get_connection()
 
+    # 1) Trouver l'utilisateur par email
+    conn.search(
+        search_base=config.LDAP_SEARCH_BASE,
+        search_filter=f"({config.LDAP_MAIL_ATTRIBUTE}={email})",
+        search_scope="SUBTREE",
+        attributes=[]  # important : ne pas demander "dn"
+    )
+
+    if not conn.entries:
+        print(f"User not found: {email}")
+        return
+
+    user_dn = conn.entries[0].entry_dn
+    print(f"User DN found: {user_dn}")
+
+    # 2) Construire le DN du rôle
     role_dn = f"cn={role_cn},{config.LDAP_ROLE_DN},{config.LDAP_SEARCH_BASE}"
 
-    # Vérifier que le rôle existe
+    # 3) Vérifier que le rôle existe
     conn.search(
         search_base=f"{config.LDAP_ROLE_DN},{config.LDAP_SEARCH_BASE}",
         search_filter=f"(cn={role_cn})",
@@ -24,8 +40,9 @@ def remove_role(user_dn: str, role_cn: str):
         print(f"Role not found: {role_cn}")
         return
 
-    print(f"Removing {user_dn} from role {role_dn}")
+    print(f"Removing user from role: {role_dn}")
 
+    # 4) Supprimer le user du rôle
     try:
         conn.modify(
             role_dn,
@@ -38,7 +55,7 @@ def remove_role(user_dn: str, role_cn: str):
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("Usage: python remove_user_role.py <user_dn> <role_cn>")
+        print("Usage: python remove_user_role.py <email> <role_cn>")
         sys.exit(1)
 
     remove_role(sys.argv[1], sys.argv[2])
