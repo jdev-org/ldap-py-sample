@@ -63,6 +63,11 @@ Principes :
 - `GeorchestraLdapClient` applique ces paramètres au `config.py` legacy puis appelle directement les fonctions des scripts (`create_user`, `create_role`, `delete_user`, etc.).
 - Aucun changement n’est nécessaire dans `ldap_actions` : la CLI continue de fonctionner comme avant.
 
+## Exemples pratiques (`examples/`)
+
+- `examples/example_alice_flow.py` : crée le rôle `FOO`, vérifie/ crée Alice en pending puis la modère.
+- `examples/example_roles_flow.py` : vérifie/ crée + modère Alice, lit ses rôles, assigne `FOO` et `BAZ`, retire `BAZ`.
+
 # Synthèse des scripts LDAP
 
 | Script | Fonction |

@@ -63,6 +63,11 @@ Notes:
 - `GeorchestraLdapClient` applies those settings to the legacy config and calls the existing scripts directly (`create_user`, `create_role`, `delete_user`, etc.).
 - The command-line usage remains unchanged; nothing is modified in `ldap_actions`.
 
+## Practical examples (`examples/`)
+
+- `examples/example_alice_flow.py`: ensures role `FOO` exists, checks/creates Alice in pending, then moderates her.
+- `examples/example_roles_flow.py`: checks/creates + moderates Alice, reads her roles, adds `FOO` and `BAZ`, then removes `BAZ`.
+
 # Summary of LDAP Scripts
 
 | Script | Function |
