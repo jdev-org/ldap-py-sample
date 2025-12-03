@@ -1,0 +1,23 @@
+Metadata-Version: 2.4
+Name: georchestra-ldap-py
+Version: 0.1.2
+Summary: Thin Python wrapper around geOrchestra LDAP helper scripts.
+Author: geOrchestra community
+License: MIT
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: ldap3
+
+# *georchestra-ldap-py*
+
+🇫🇷 You speak french ?
+
+Ces scripts ciblent principalement un LDAP suivant le schéma geOrchestra (objectClasses, org units, roles).
+
+- https://github.com/jdev-org/ldap-py-sample/blob/main/README.FR.md
+
+🇬🇧 You speak english ?
+
+These scripts primarily target an LDAP that follows the geOrchestra schema  (objectClasses, org units, roles).
+
+- https://github.com/jdev-org/ldap-py-sample/blob/main/README.EN.md
