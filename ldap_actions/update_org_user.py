@@ -1,7 +1,8 @@
-import sys
-sys.path.append("..") 
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from ldap_connection import get_connection
-from .. import config
+import config
 
 def update_user_org(user_dn, org_cn):
     conn = get_connection()
