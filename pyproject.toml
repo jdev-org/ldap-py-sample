@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "georchestra-ldap-py"
-version = "0.1.1"
+version = "0.1.2"
 description = "Thin Python wrapper around geOrchestra LDAP helper scripts."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -17,9 +17,6 @@ authors = [
 license = { text = "MIT" }
 
 [tool.setuptools]
+packages = ["ldap_actions", "georchestra_ldap"]
 py-modules = ["config"]
 include-package-data = true
-
-[tool.setuptools.packages.find]
-include = ["*"]
-exclude = ["tests", "tests.*", "docs", "docs.*"]
