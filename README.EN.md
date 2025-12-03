@@ -3,6 +3,27 @@
 This repository contains a collection of Python scripts designed to easily manage users, roles, and organizations in a geOrchestra-compatible LDAP directory.  
 The goal is to provide a simple, consistent, and automatable toolkit for administering LDAP without relying on heavy interfaces or manual commands.
 
+## Prerequisites
+
+- Python 3 installed (`python3` on most systems)
+- Network access to the LDAP server and a bind account with write permissions
+- A `config.py` file adjusted for your geOrchestra environment
+
+## Quick setup
+
+- (Optional) create a virtualenv: `python3 -m venv .venv && source .venv/bin/activate`
+- Install dependencies: `pip install -r requirements.txt`
+
+## Configuration
+
+All settings are in `config.py`:
+
+- `LDAP_SERVER`, `LDAP_PORT`, `LDAP_USE_SSL`: LDAP target
+- `LDAP_USER_DN`, `LDAP_PASSWORD`: bind account used by the scripts
+- `LDAP_SEARCH_BASE`: suffix (e.g., `dc=georchestra,dc=org`)
+- `LDAP_USERS_DN`, `LDAP_ORG_DN`, `LDAP_ROLE_DN`: relative DNs for users, orgs, and roles
+- `LDAP_MAIL_ATTRIBUTE`: attribute used to look up a user by email
+
 ## Main Features
 
 - **User creation** with the correct geOrchestra objectClasses  
@@ -15,7 +36,7 @@ The goal is to provide a simple, consistent, and automatable toolkit for adminis
 - **Clean user deletion** (removal from all groups)
 - Modular architecture: all scripts share a common LDAP connection handler
 
-## Purpose
+## Purpose and usage
 
 To make LDAP administration accessible and automatable by providing standalone, readable, composable scripts that remain fully compatible with geOrchestra, without requiring deep LDAP knowledge.
 
@@ -30,11 +51,17 @@ Each script can be used individually or integrated into CI/CD pipelines or inter
 | **create_user.py** | Creates a user in `ou=pendingusers` using proper geOrchestra objectClasses, generates an SSHA password, and automatically assigns the `USER` role and the `C2C` organization. |
 | **moderate_user.py** | Activates a user by moving them from `ou=pendingusers` to `ou=users` without altering roles or organization. |
 | **add_user_role.py** | Adds a role (LDAP group) to a user by inserting their DN into the role’s `member` attribute. |
+| **remove_user_role.py** | Removes a user from an existing role. |
 | **create_role.py** | Creates a new LDAP role in `ou=roles` if it does not already exist. |
+| **delete_role.py** | Deletes a role after removing all its members. |
 | **create_org.py** | Creates a new LDAP organization in `ou=orgs` if it does not already exist. |
+| **update_org_user.py** | Adds a user (DN) to a given organization. |
+| **update_user_name.py** | Updates the `sn` (last name) of a user via their DN. |
 | **delete_user.py** | Deletes a user: removes them from all roles and organizations, then deletes the LDAP entry. |
 
 # LDAP Command Summary Table
+
+Run commands from the repository root (`python ldap_actions/<script>.py ...`).
 
 | Action | Command |
 |--------|---------|
@@ -42,7 +69,11 @@ Each script can be used individually or integrated into CI/CD pipelines or inter
 | Read user roles | `python ldap_actions/read_user_roles.py utest2@utest.fr` |
 | Create a user (pending + USER + C2C) | `python ldap_actions/create_user.py utest2 utest2@utest.fr Test User2 MySecretPass123` |
 | Activate a user (pending → users) | `python ldap_actions/moderate_user.py utest2@utest.fr` |
-| Add a role to a user | `python ldap_actions/add_user_role.py "uid=utest2,ou=users,dc=georchestra,dc=org" SUPERUSER` |
-| Create a role if it does not exist | `python ldap_actions/create_role.py MYCUSTOMROLE` |
+| Add a role to a user | `python ldap_actions/add_user_role.py utest2@utest.fr SUPERUSER` |
+| Remove a role from a user | `python ldap_actions/remove_user_role.py utest2@utest.fr SUPERUSER` |
+| Create a role if it does not exist | `python ldap_actions/create_role.py MYCUSTOMROLE "Optional description"` |
+| Delete a role | `python ldap_actions/delete_role.py MYCUSTOMROLE` |
 | Create an organization if it does not exist | `python ldap_actions/create_org.py MYORG "My Organization"` |
+| Add a user to an organization (DN required) | `python ldap_actions/update_org_user.py "uid=utest2,ou=users,dc=georchestra,dc=org" MYORG` |
+| Update last name (DN required) | `python ldap_actions/update_user_name.py "uid=utest2,ou=users,dc=georchestra,dc=org" NewLastname` |
 | Delete a user | `python ldap_actions/delete_user.py utest2@utest.fr` |
