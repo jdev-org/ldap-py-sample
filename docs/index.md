@@ -55,3 +55,5 @@ client.read_user_roles("alice@example.org")
 | **update_user_name.py** | Updates the `sn` (last name) of a user via their DN. |
 | **delete_user.py** | Deletes a user: removes them from all roles and organizations, then deletes the LDAP entry. |
 | **role_exist.py** | Checks whether a role exists under `ou=roles`. |
+| **get_user_infos.py** | Returns/prints a user entry by email (DN, uid, cn, mail, memberOf). |
+| **get_role_infos.py** | Returns/prints a role entry by cn (DN, description, members). |

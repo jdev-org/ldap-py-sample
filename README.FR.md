@@ -115,6 +115,8 @@ Chaque méthode log le nom de l’action en INFO et produit un traceback complet
 | **update_user_name.py** | Met à jour le nom de famille (`sn`) d’un utilisateur via son DN. |
 | **delete_user.py** | Supprime un utilisateur : le retire de tous ses rôles/organisations puis efface son entrée LDAP. |
 | **role_exist.py** | Vérifie si un rôle existe sous `ou=roles`. |
+| **get_user_infos.py** | Retourne/affiche une entrée utilisateur par email (DN, uid, cn, mail, memberOf). |
+| **get_role_infos.py** | Retourne/affiche une entrée rôle par cn (DN, description, membres). |
 
 # Tableau récapitulatif des commandes LDAP
 

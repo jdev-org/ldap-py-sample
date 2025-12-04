@@ -16,4 +16,6 @@ __all__ = [
     "LegacyScriptsMissing",
     "apply_settings_to_legacy_config",
     "role_exists",
+    "get_user_infos",
+    "get_role_infos",
 ]
